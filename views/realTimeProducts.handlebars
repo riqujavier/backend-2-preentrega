@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Real Time Products</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="">
+        <h1>Real Time Products</h1>
+        <form id="productForm">
+            <input type="text" id="title" placeholder="Title" required>
+            <input type="text" id="description" placeholder="Description" required>
+            <input type="text" id="code" placeholder="Code" required>
+            <input type="number" id="price" placeholder="Price" required>
+            <select id="status" required>
+                <option value="true">Available</option>
+                <option value="false">Unavailable</option>
+            </select>
+            <input type="number" id="stock" placeholder="Stock" required>
+            <input type="text" id="category" placeholder="Category" required>
+            <button type="submit">Add Product</button>
+        </form>
+        <ul id="productList">
+            {{#each products}}
+            <li data-id="{{this.id}}">
+                <li>ID: {{this.id}} - {{this.title}} - {{this.description}} - {{this.code}} - {{this.price}} - {{this.status}} - {{this.stock}} - {{this.category}}</li>
+                <button class="deleteBtn">Delete</button>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const product = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                code: document.getElementById('code').value,
+                price: parseFloat(document.getElementById('price').value),
+                status: document.getElementById('status').value === 'true',
+                stock: parseInt(document.getElementById('stock').value),
+                category: document.getElementById('category').value,
+            };
+            socket.emit('newProduct', product);
+        });
+
+        document.getElementById('productList').addEventListener('click', function(e) {
+            if (e.target.className === 'deleteBtn') {
+                const productId = e.target.parentElement.getAttribute('data-id');
+                socket.emit('deleteProduct', productId);
+            }
+        });
+
+        socket.on('updateProducts', function(products) {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
+            products.forEach(product => {
+                const li = document.createElement('li');
+                li.setAttribute('data-id', product.id);
+                li.innerHTML = `
+                   Product: ${product.title} <br> Description: ${product.description} <br> Code: ${product.code} <br>Price: ${product.price} <br> Status: ${product.status} <br> Stock: ${product.stock} <br>Category: ${product.category}
+                    <button class="deleteBtn">Delete</button>
+                `;
+                productList.appendChild(li);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -12,5 +12,15 @@
       "ruta2.jpg"
     ],
     "id": 1
+  },
+  {
+    "title": "Torta",
+    "description": "Bizcochuelo con ddl ",
+    "code": "TOR142",
+    "price": 200,
+    "status": true,
+    "stock": 10,
+    "category": "Panaderia",
+    "id": 2
   }
 ]
