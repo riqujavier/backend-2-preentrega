@@ -22,5 +22,15 @@
     "stock": 10,
     "category": "Panaderia",
     "id": 2
+  },
+  {
+    "id": 3,
+    "code": "MOB12",
+    "title": "iphone",
+    "description": "modelo 15 pro",
+    "price": 2000,
+    "status": true,
+    "stock": 2,
+    "category": "Informatica"
   }
 ]

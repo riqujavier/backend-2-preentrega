@@ -17,6 +17,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const productsRouter = require('./routes/products');
+const cartsRouter = require('./routes/carts');
+
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
 app.get('/products', async (req, res) => {
     const products = await productManager.getAll();
     res.render('index', { products });
@@ -28,7 +33,7 @@ app.get('/realtimeproducts', async (req, res) => {
 });
 
 io.on('connection', async (socket) => {
-    console.log('cliente conectado');
+    console.log('Cliente conectado');
     const products = await productManager.getAll();
     socket.emit('updateProducts', products);
 
@@ -45,6 +50,7 @@ io.on('connection', async (socket) => {
     });
 });
 
-http.listen(8080, () => {
-    console.log('Server is running on port 8080');
+const PORT = 8080;
+http.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
