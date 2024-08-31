@@ -1,6 +1,31 @@
-<h1>Products</h1>
-<ul>
-    {{#each products}}
-    <li>ID: {{this.id}} - {{this.title}} - {{this.description}} - {{this.code}} - {{this.price}} - {{this.status}} - {{this.stock}} - {{this.category}}</li>
-    {{/each}}
-</ul>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Productos</title>
+</head>
+<body>
+    <h1>Productos</h1>
+
+    <div>
+        {{#if hasPrevPage}}
+            <a href="/products?page={{prevPage}}&limit={{limit}}&sort={{sort}}&query={{query}}">Anterior</a>
+        {{else}}
+            Anterior
+        {{/if}}
+
+        {{#if hasNextPage}}
+            <a href="/products?page={{nextPage}}&limit={{limit}}&sort={{sort}}&query={{query}}">Siguiente</a>
+        {{else}}
+            Siguiente
+        {{/if}}
+    </div>
+
+    <ul>
+        {{#each products}}
+            <li>
+                ID: {{this._id}} - {{this.title}} - {{this.description}} - {{this.code}} - {{this.price}} - {{this.status}} - {{this.stock}} - {{this.category}}
+            </li>
+        {{/each}}
+    </ul>
+</body>
+</html>

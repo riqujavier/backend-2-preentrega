@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real Time Products</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
@@ -22,8 +24,8 @@
         </form>
         <ul id="productList">
             {{#each products}}
-            <li data-id="{{this.id}}">
-                <li>ID: {{this.id}} - {{this.title}} - {{this.description}} - {{this.code}} - {{this.price}} - {{this.status}} - {{this.stock}} - {{this.category}}</li>
+            <li data-id="{{this._id}}">
+                ID: {{this._id}} - {{this.title}} - {{this.description}} - {{this.code}} - {{this.price}} - {{this.status}} - {{this.stock}} - {{this.category}}
                 <button class="deleteBtn">Delete</button>
             </li>
             {{/each}}
@@ -59,9 +61,9 @@
             productList.innerHTML = '';
             products.forEach(product => {
                 const li = document.createElement('li');
-                li.setAttribute('data-id', product.id);
+                li.setAttribute('data-id', product._id);
                 li.innerHTML = `
-                   Product: ${product.title} <br> Description: ${product.description} <br> Code: ${product.code} <br>Price: ${product.price} <br> Status: ${product.status} <br> Stock: ${product.stock} <br>Category: ${product.category}
+                   ID: ${product._id} - ${product.title} - ${product.description} - ${product.code} - ${product.price} - ${product.status} - ${product.stock} - ${product.category}
                     <button class="deleteBtn">Delete</button>
                 `;
                 productList.appendChild(li);

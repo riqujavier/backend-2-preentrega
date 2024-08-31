@@ -1,50 +1,31 @@
-const fs = require('fs').promises;
-const path = require('path');
-const crypto = require('crypto');
+const Product = require('../models/Product');
 
 class ProductManager {
-    constructor() {
-        this.filePath = path.join(__dirname, '..', 'data', 'products.json');
-    }
-
-    async getAll() {
-        const data = await fs.readFile(this.filePath, 'utf-8');
-        return JSON.parse(data || '[]');
-    }
-
-    generateId(products) {
-        return products.length ? products[products.length - 1].id + 1 : 1;
-    }
-
-    generateCode() {
-        return crypto.randomBytes(4).toString('hex');
-    }
-    async addProduct(product) {
-        const products = await this.getAll();
-        const newProduct = { 
-            id: this.generateId(products), 
-            code: this.generateCode(), 
-            ...product 
+    async getAll(query = {}, limit = 10, page = 1, sort = null) {
+        const options = {
+            limit: parseInt(limit),
+            page: parseInt(page),
+            sort: sort ? { price: sort === 'asc' ? 1 : -1 } : {},
         };
-        products.push(newProduct);
-        await fs.writeFile(this.filePath, JSON.stringify(products, null, 2));
-        return newProduct;
+        const products = await Product.paginate(query, options);
+        return products;
     }
+
     async getById(id) {
-        const products = await this.getAll();
-        return products.find(product => product.id === id);
+        return await Product.findById(id);
     }
-    async deleteProduct(id) {
-        let products = await this.getAll();
-        products = products.filter(product => product.id !== id);
-        await fs.writeFile(this.filePath, JSON.stringify(products, null, 2));
+
+    async addProduct(productData) {
+        const product = new Product(productData);
+        return await product.save();
     }
 
     async updateProduct(id, updatedProduct) {
-        let products = await this.getAll();
-        products = products.map(product => (product.id === id ? { ...product, ...updatedProduct, id: product.id } : product));
-        await fs.writeFile(this.filePath, JSON.stringify(products, null, 2));
-        return products.find(product => product.id === id);
+        return await Product.findByIdAndUpdate(id, updatedProduct, { new: true });
+    }
+
+    async deleteProduct(id) {
+        return await Product.findByIdAndDelete(id);
     }
 }
 
